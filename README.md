@@ -1,2 +1,2 @@
-# macaroni
-macaroni - MAC Address Changer
+# Macaroni
+Macaroni is an open source MAC Address changer
