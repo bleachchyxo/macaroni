@@ -1,0 +1,83 @@
+#!/bin/bash
+# Macaroni - MAC Address Changer
+#
+# Macaroni: A command-line MAC Address changer based on fdisk interface
+# https://github.com/bleachchyxo/macaroni.git
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+menu=1
+cache=0
+
+printf "\n\x1b[36mMacaroni v0.1\x1b[0m\n";
+printf "Changes will remain in memory only.\n"
+
+while [ $menu == 1 ]
+do
+
+	printf "\nCommand (h for help):"
+	read option
+
+	if [ "$option" = "h" ]; then
+
+		printf "\nHelp:\n\n"
+		echo -e "\033[1m  Options\033[0m"
+		printf "   c  custom MAC Address"
+		printf "\n   g  generate a random MAC Address"
+		printf "\n   n  new random MAC Address"
+		printf "\n   w  write changes"
+		printf "\n   q  quit\n"
+
+	elif [ "$option" == "c" ]; then
+
+		printf "\nEnter a MAC Address:"
+		read macaddr
+		cache=1
+
+	elif [ "$option" == "g" ]; then
+		
+		# Choose a random MAC prefix brand
+		file="$(find mac-prefix/ -type f | shuf -n 1)"
+
+		# Choose a random MAC prefix from the list
+		prefix="$(shuf -n 1 $file)"
+
+		# Randomly complete the MAC Address
+		host="$(printf '%02x' $((0x$(od /dev/urandom -N1 -t x1 -An | cut -c 2-) & 0xFE | 0x02)); od /dev/urandom -N2 -t x1 -An | sed 's/ /:/g')"
+
+		# Print MAC Addrees generated
+		printf "\n$prefix:$host\n"
+
+	elif [ "$option" == "n" ]; then
+
+		file="$(find mac-prefix/ -type f | shuf -n 1)"
+		prefix="$(shuf -n 1 $file)"
+		host="$(printf '%02x' $((0x$(od /dev/urandom -N1 -t x1 -An | cut -c 2-) & 0xFE | 0x02)); od /dev/urandom -N2 -t x1 -An | sed 's/ /:/g')"
+		macaddr=$prefix:$host
+		printf "\nYour new MAC Address:\n$macaddr\n"
+		cache=1
+
+	elif [ "$option" == "w" ]; then
+
+		if [ "$cache" == 1 ]; then
+
+			# Changes your MAC Address
+			ifconfig wlan0 down && ifconfig wlan0 hw ether $macaddr && ifconfig wlan0 up
+			printf "\nAll changes saved\n"
+		else
+			printf "\nNo changes made\n"
+		fi
+
+	elif [ "$option" == "q" ]; then
+		menu=0
+	else
+		printf "\x1b[31m$option: command unknown\x1b[0m\n";
+	fi
+
+done
