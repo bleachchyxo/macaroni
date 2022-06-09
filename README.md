@@ -14,4 +14,4 @@ As easy as converting the file named `macaroni` into an executable
 It's important for you to know that `macaroni` needs to be executed as `root` or `sudo` otherwise the changes cannot be made.
 
 
-Running `macaroni` and typing `h` will give a helpful list of options.
+While running `macaroni` by typing `h` will give a helpful list of options.
