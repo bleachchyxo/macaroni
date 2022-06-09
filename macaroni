@@ -23,7 +23,8 @@ do
 
 	printf "\nCommand (h for help):"
 	read option
-
+	
+# Help
 	if [ "$option" = "h" ]; then
 
 		printf "\nHelp:\n\n"
@@ -34,12 +35,14 @@ do
 		printf "\n   w  write changes"
 		printf "\n   q  quit\n"
 
+# Custom MAC Address
 	elif [ "$option" == "c" ]; then
 
 		printf "\nEnter a MAC Address:"
 		read macaddr
 		cache=1
 
+# Generate MAC Address
 	elif [ "$option" == "g" ]; then
 		
 		# Choose a random MAC prefix brand
@@ -54,6 +57,7 @@ do
 		# Print MAC Addrees generated
 		printf "\n$prefix:$host\n"
 
+# Create new MAC Address
 	elif [ "$option" == "n" ]; then
 
 		file="$(find mac-prefix/ -type f | shuf -n 1)"
@@ -63,6 +67,7 @@ do
 		printf "\nYour new MAC Address:\n$macaddr\n"
 		cache=1
 
+# Write changes
 	elif [ "$option" == "w" ]; then
 
 		if [ "$cache" == 1 ]; then
@@ -74,6 +79,7 @@ do
 			printf "\nNo changes made\n"
 		fi
 
+# Quit/Exit
 	elif [ "$option" == "q" ]; then
 		menu=0
 	else
