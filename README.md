@@ -7,7 +7,7 @@ Lastest version v0.1
 
 As easy as converting the file named `macaroni` into an executable
 
-    $ sudo chmod -x macaroni
+    $ sudo chmod +x macaroni
 
 ## Using macaroni
 
